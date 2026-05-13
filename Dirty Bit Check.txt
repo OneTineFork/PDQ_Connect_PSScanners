@@ -1,0 +1,7 @@
+$sysDrive = (Get-CimInstance Win32_OperatingSystem).SystemDrive
+$out = (cmd.exe /c "fsutil dirty query $sysDrive") 2>&1 | Out-String
+[pscustomobject]@{
+  Check="DirtyBit"
+  Status= if ($out -match "is NOT Dirty") { "OK" } elseif ($out -match "is Dirty") { "FAIL" } else { "UNKNOWN" }
+  Detail= ($out.Trim() -replace '\s+', ' ')
+}

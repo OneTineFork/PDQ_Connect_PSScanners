@@ -1,0 +1,47 @@
+$ErrorActionPreference = 'Stop'
+
+try {
+    $rows = @()
+
+    $adapters = Get-DnsClientServerAddress -AddressFamily IPv4 |
+        Where-Object { $_.ServerAddresses -and $_.ServerAddresses.Count -gt 0 }
+
+    foreach ($a in $adapters) {
+        $sa = @($a.ServerAddresses)
+
+        $rows += [PSCustomObject]@{
+            InterfaceAlias = $a.InterfaceAlias
+            InterfaceIndex = $a.InterfaceIndex
+            PrimaryDNS     = $sa[0]
+            SecondaryDNS   = if ($sa.Count -ge 2) { $sa[1] } else { $null }
+            AllDNS         = ($sa -join ', ')
+            DnsCount       = $sa.Count
+        }
+    }
+
+    # IMPORTANT: Always return at least one object with the same columns
+    if ($rows.Count -eq 0) {
+        [PSCustomObject]@{
+            InterfaceAlias = $null
+            InterfaceIndex = $null
+            PrimaryDNS     = $null
+            SecondaryDNS   = $null
+            AllDNS         = $null
+            DnsCount       = 0
+        }
+    }
+    else {
+        $rows
+    }
+}
+catch {
+    # Still return an object (consistent schema) so validation doesn't choke
+    [PSCustomObject]@{
+        InterfaceAlias = $null
+        InterfaceIndex = $null
+        PrimaryDNS     = $null
+        SecondaryDNS   = $null
+        AllDNS         = "ERROR: $($_.Exception.Message)"
+        DnsCount       = -1
+    }
+}

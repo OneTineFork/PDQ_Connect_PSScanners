@@ -1,0 +1,6 @@
+$wmi = (cmd.exe /c "winmgmt /verifyrepository") 2>&1 | Out-String
+[pscustomobject]@{
+  Check="WMI_Repository"
+  Status= if ($wmi -match "WMI repository is consistent") { "OK" } else { "WARN" }
+  Detail= ($wmi.Trim() -replace '\s+', ' ')
+}

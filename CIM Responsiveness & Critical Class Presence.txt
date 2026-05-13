@@ -1,0 +1,20 @@
+$errors = @()
+
+try {
+  $os = Get-CimInstance Win32_OperatingSystem -ErrorAction Stop
+} catch { $errors += "CIM Win32_OperatingSystem failed: $($_.Exception.Message)" }
+
+# Networking classes that back Get-NetIPAddress
+$netIpClassOk = $true
+try {
+  $null = Get-CimClass -Namespace root/StandardCimv2 -ClassName MSFT_NetIPAddress -ErrorAction Stop
+} catch {
+  $netIpClassOk = $false
+  $errors += "Missing/broken MSFT_NetIPAddress in root/StandardCimv2"
+}
+
+[pscustomobject]@{
+  Check="CIM_CoreAndNetTCPIP"
+  Status= if ($errors.Count -eq 0) { "OK" } elseif (-not $netIpClassOk) { "FAIL" } else { "WARN" }
+  Detail= if ($errors.Count -eq 0) { "CIM OK; NetTCPIP classes present." } else { ($errors -join " | ") }
+}
