@@ -18,6 +18,8 @@ SSD Health Check: This one needs work. It has helped us ID an SSD nearing its en
 
 SecureBootCertCheck: This has been very helpful as we near the expiration of old secure boot certs. I guess I'll leave it here for the next round in 15 years.
 
+ShadowCopyTracking: We find that setting up shadow copies is often missed when a new file server gets spun up, and not noticed until there's a need to restore a file to a previous version. This scanner will return the configuration for all fixed drives, the last successful shadow copy, how many total shadow copies, whether the MaxShadowCopies registry key is set to increase the number of shadow copies, and disk space allotment vs. usage.
+
 SubnetsMissingfromADSS: As a large, distributed organization, we're frequently spinning up new small offices and often their subnets don't get entered in ADSS. This scanner peruses netlogon.log and returns entries reporting NO_CLIENT_SITE so we can ensure we're keeping up with location changes.
 
 SystemStabilityCheck: Too many results for me to consider this useful, right now, but maybe I can improve it in the future.
