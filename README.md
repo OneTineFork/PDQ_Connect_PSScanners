@@ -8,6 +8,8 @@ DirtyBitCheck: We've gotten a few hits with this scanner. They may resolve on th
 
 GhostUSBDevicesandDisconnectLoops: This is more of a concept, at this point, I haven't seen any hits, yet. The intent is to id failing laptop docks, bad USB-C cables, or failing internal webcams/bluetooth modules.
 
+Hyper-V-CheckpointScanner: We have a fairly common problem across our Hyper-V host fleet with .avhdx files sticking around after backups, or occasionally people taking checkpoints and forgetting to clean them up. This scanner identifies .avhdx files in D:\Hyper*, reports the size of the largest one, and also identifies whether any of them are orphaned (i.e. not visible in Hyper-V manager).
+
 Memory-Paging-Resource-CorruptionSignals: This one generates too many results, as well, and I haven't determined if any of them are actionable. I intend to keep it running for a while, though, and look for actionable results.
 
 ResourceMonitor: I won't leave this one running, but since we can "validate" a disabled scanner against a single device it could possibly be useful on rare occasions.
